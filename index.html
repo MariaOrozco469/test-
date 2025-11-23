@@ -2,165 +2,244 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<title>Cuestionario - Historia de la Tecnología</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cuestionario - Historia de la Computadora</title>
 <style>
   body {
     font-family: Arial, sans-serif;
-    background-color: #ffffff;
-    color: #444;
+    background-color:#ffeef7; background-image:url('https://images.unsplash.com/photo-1524253482453-3fed8d2fe12b?auto=format&fit=crop&w=1600&q=80'); background-size:cover; background-position:center;
+    margin: 0;
+    padding: 0;
+    color: #333;
+  }
+  .container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
     padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
   }
-  h1 {
+  h1, h2 {
     text-align: center;
-    color: #e78ac3;
-    font-size: 2.2rem;
+    color: #e78ab3;
   }
-  #start-screen {
+  .start-screen {
     text-align: center;
-    margin-top: 40px;
+    padding: 40px;
   }
-  .input-name {
+  input[type="text"] {
     padding: 10px;
+    width: 70%;
     border-radius: 10px;
-    border: 2px solid #ffb3d9;
+    border: 2px solid #e7a5c4;
   }
   button {
-    background-color: #e78ac3;
+    background-color: #e78ab3;
     color: white;
-    padding: 12px 20px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 15px;
-    font-size: 1rem;
+    border-radius: 10px;
     cursor: pointer;
-    margin-top: 15px;
+    font-size: 16px;
   }
-  .question-card {
-    background: #ffe6f2;
-    border: 2px solid #ffb3d9;
-    border-radius: 18px;
-    padding: 18px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-  }
-  .question-title {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    font-weight: bold;
-  }
-  ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  li {
-    margin: 6px 0;
-  }
-  .feedback-card {
-    background: #fff5fb;
-    border: 2px solid #f4a4d4;
+  button:hover { opacity: 0.9; }
+
+  .question {
+    margin-bottom: 30px;
+    background: #fff7fc;
     padding: 15px;
     border-radius: 15px;
-    margin-bottom: 20px;
+    border: 2px solid #f3c1d9;
   }
-  .correct { border-color: #8bd67a; }
-  .incorrect { border-color: #ff7b7b; }
+
+  .question img {
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 10px;
+  }
+
+  .option {
+    margin: 10px 0;
+    padding: 10px;
+    background: white;
+    border-radius: 10px;
+    border: 2px solid #f3c1d9;
+    cursor: pointer;
+  }
+
+  .incorrect {
+    animation: shake 0.3s;
+    border-color: red !important;
+  }
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+
+  .feedback {
+    background: #ffe6f3;
+    border-left: 5px solid #e78ab3;
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+
+  .hidden { display: none; }
 </style>
 </head>
 <body>
-<h1>🖥️✨ Cuestionario: Historia de la Tecnología ✨🖥️</h1>
 
-<div id="start-screen">
-  <h2>Ingresa tu nombre</h2>
-  <input id="studentName" class="input-name" type="text" placeholder="Tu nombre" />
-  <br>
-  <button onclick="startQuiz()">Iniciar Cuestionario</button>
+<div class="container">
+
+  <div id="startScreen" class="start-screen">
+    <h1>Cuestionario: Historia de la Computadora</h1>
+    <p>Ingresa tu nombre para comenzar:</p>
+    <input type="text" id="studentName" placeholder="Tu nombre" />
+    <br><br>
+    <button onclick="startQuiz()">Iniciar</button>
+  </div>
+
+  <div id="quiz" class="hidden">
+    <h2 id="welcomeName"></h2>
+
+    <div id="questions"></div>
+
+    <button onclick="finishQuiz()">Finalizar</button>
+
+    <div id="finalFeedback" class="feedback hidden"></div>
+  </div>
+
 </div>
 
-<div id="quiz"></div>
-<div id="result"></div>
-
 <script>
-const questions = [
+const quizData = [
   {
+    img: "https://i.imgur.com/OH7JzvV.jpeg",
     question: "¿Quién es considerado el padre de la computación?",
-    options: ["Alan Turing", "Charles Babbage", "John von Neumann"],
-    answer: "Charles Babbage",
-    explanation: "Charles Babbage diseñó la máquina analítica, considerada el primer concepto de computadora programable."
+    options: ["Steve Jobs", "Alan Turing", "Bill Gates", "Tim Berners-Lee"],
+    answer: 1,
+    explanation: "Alan Turing es considerado el padre de la ciencia computacional y de la inteligencia artificial."
   },
   {
-    question: "¿Cuál fue la primera computadora electrónica de propósito general?",
-    options: ["ENIAC", "UNIVAC", "Colossus"],
-    answer: "ENIAC",
-    explanation: "ENIAC fue la primera computadora electrónica de propósito general, construida en 1945."
+    img: "https://i.imgur.com/Gh1Kp7v.jpeg",
+    question: "¿En qué año se creó la primera computadora electrónica ENIAC?",
+    options: ["1945", "1960", "1920", "1981"],
+    answer: 0,
+    explanation: "ENIAC se completó en 1945 y fue una de las primeras computadoras electrónicas de propósito general."
   },
   {
-    question: "¿En qué generación se usaron transistores?",
-    options: ["Primera", "Segunda", "Tercera"],
-    answer: "Segunda",
-    explanation: "La segunda generación de computadoras reemplazó las válvulas al vacío por transistores, haciéndolas más rápidas y pequeñas."
+    img: "https://i.imgur.com/zafWJ8t.jpeg",
+    question: "¿Qué máquina inventó Charles Babbage?",
+    options: ["La Máquina Analítica", "El mouse", "La impresora", "El microprocesador"],
+    answer: 0,
+    explanation: "La Máquina Analítica fue el diseño pionero que dio origen al concepto de computadora programable."
   },
   {
-    question: "¿Quién inventó el primer mouse?",
-    options: ["Steve Jobs", "Bill Gates", "Douglas Engelbart"],
-    answer: "Douglas Engelbart",
-    explanation: "El primer mouse fue creado por Douglas Engelbart en 1964 como parte de un sistema avanzado de interfaz."
+    img: "https://i.imgur.com/cvOuhom.jpeg",
+    question: "¿Quién creó el primer mouse de computadora?",
+    options: ["Douglas Engelbart", "Elon Musk", "Steve Wozniak", "Nikola Tesla"],
+    answer: 0,
+    explanation: "Douglas Engelbart creó el primer prototipo de mouse en 1964."
   },
   {
-    question: "¿Qué compañía lanzó la primera PC exitosa?",
-    options: ["Apple", "IBM", "Microsoft"],
-    answer: "IBM",
-    explanation: "La IBM PC de 1981 se convirtió en el estándar de la computación personal."
+    img: "https://i.imgur.com/9RxaXCs.jpeg",
+    question: "¿Qué empresa lanzó la primera computadora personal IBM PC?",
+    options: ["Meta", "IBM", "Google", "Apple"],
+    answer: 1,
+    explanation: "En 1981 IBM lanzó la famosa IBM PC, que impulsó la computación personal."
+  },
+  {
+    img: "https://i.imgur.com/S2Ya2FE.jpeg",
+    question: "¿Qué significan las siglas CPU?",
+    options: ["Central Processing Unit", "Computer Personal Unit", "Central Power Utility", "Core Programming Unit"],
+    answer: 0,
+    explanation: "CPU significa Unidad Central de Procesamiento, el cerebro del computador."
+  },
+  {
+    img: "https://i.imgur.com/9u0DxQJ.jpeg",
+    question: "¿Cuál fue la primera computadora programable de la historia?",
+    options: ["ENIAC", "Colossus", "Z3", "Macintosh"],
+    answer: 2,
+    explanation: "La Z3 de Konrad Zuse (1941) fue la primera computadora totalmente programable y automática."
+  },
+  {
+    img: "https://i.imgur.com/KP30t8M.jpeg",
+    question: "¿Quién inventó el lenguaje de computación COBOL?",
+    options: ["Margaret Hamilton", "Ada Lovelace", "Grace Hopper", "Linus Torvalds"],
+    answer: 2,
+    explanation: "Grace Hopper fue una pionera e inventó COBOL, utilizado en sistemas empresariales."
+  },
+  {
+    img: "https://i.imgur.com/R6kD1zY.jpeg",
+    question: "¿Cuál fue la primera empresa en comercializar una computadora personal?",
+    options: ["Apple", "MITS", "IBM", "Microsoft"],
+    answer: 1,
+    explanation: "MITS lanzó la Altair 8800 en 1975, considerada la primera computadora personal comercial."
+  },
+  {
+    img: "https://i.imgur.com/prPt9eS.jpeg",
+    question: "¿Qué inventó Tim Berners‑Lee en 1989?",
+    options: ["La inteligencia artificial", "El internet", "La realidad virtual", "La World Wide Web"],
+    answer: 3,
+    explanation: "Tim Berners‑Lee creó la World Wide Web, base de la navegación actual por internet."
   }
 ];
 
-let studentName = "";
-let studentAnswers = [];
-
 function startQuiz() {
-  studentName = document.getElementById('studentName').value;
-  if (!studentName.trim()) return alert("Por favor ingresa tu nombre");
+  const name = document.getElementById("studentName").value;
+  if (!name.trim()) return alert("Ingresa tu nombre");
 
-  document.getElementById('start-screen').style.display = "none";
-
-  const quizDiv = document.getElementById('quiz');
-  quizDiv.innerHTML = "";
-
-  questions.forEach((q, i) => {
-    quizDiv.innerHTML += `
-      <div class='question-card'>
-        <div class='question-title'>${i+1}. ${q.question}</div>
-        <ul>
-          ${q.options.map(opt => `
-            <li>
-              <label><input type='radio' name='q${i}' value='${opt}'> ${opt}</label>
-            </li>`).join('')}
-        </ul>
-      </div>`;
-  });
-
-  quizDiv.innerHTML += `<button onclick='finishQuiz()'>Finalizar</button>`;
+  document.getElementById("welcomeName").innerText = `Bienvenida/o, ${name}`;
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+  loadQuestions();
 }
 
-function finishQuiz() {
-  const resultDiv = document.getElementById('result');
-  resultDiv.innerHTML = `<h2>Resultados de ${studentName}</h2>`;
-
-  questions.forEach((q, index) => {
-    const selected = document.querySelector(`input[name='q${index}']:checked`);
-    const studentAnswer = selected ? selected.value : "Sin responder";
-    const correct = studentAnswer === q.answer;
-
-    resultDiv.innerHTML += `
-      <div class="feedback-card ${correct ? 'correct' : 'incorrect'}">
-        <h3>Pregunta ${index + 1}: ${q.question}</h3>
-        <p><strong>Tu respuesta:</strong> ${studentAnswer}</p>
-        <p><strong>Respuesta correcta:</strong> ${q.answer}</p>
-        <p class="explanation"><strong>Explicación:</strong> ${q.explanation}</p>
+function loadQuestions() {
+  let html = "";
+  quizData.forEach((q, index) => {
+    html += `
+      <div class='question' id='q${index}'>
+        
+        <p><strong>${index + 1}. ${q.question}</strong></p>
+        ${q.options.map((opt, i) => `
+          <div class='option' onclick='selectOption(${index}, ${i}, this)'>${opt}</div>
+        `).join("")}
+        <div id='feedback${index}' class='feedback hidden'></div>
       </div>
     `;
   });
+  document.getElementById("questions").innerHTML = html;
+}
+
+function selectOption(qIndex, optionIndex, element) {
+  const correct = quizData[qIndex].answer;
+  const feedback = document.getElementById(`feedback${qIndex}`);
+
+  if (optionIndex !== correct) {
+    element.classList.add("incorrect");
+    feedback.innerHTML = `<strong>Incorrecto.</strong> ${quizData[qIndex].explanation}`;
+  } else {
+    feedback.innerHTML = `<strong>Correcto.</strong> ${quizData[qIndex].explanation}`;
+  }
+
+  feedback.classList.remove("hidden");
+}
+
+function finishQuiz() {
+  document.getElementById("finalFeedback").innerHTML =
+    `<h3>Autora: <strong>Maria Camila Orozco</strong></h3>`;
+  document.getElementById("finalFeedback").classList.remove("hidden");
 }
 </script>
+
 </body>
 </html>
+
 <script src='https://cdn.jotfor.ms/agent/embedjs/019ab239b8757828bbd5dd79e6b5b91d3fd7/embed.js'>
 </script>
