@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<title>Cuestionario - Historia de la Tecnología</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #444;
+    padding: 20px;
+  }
+  h1 {
+    text-align: center;
+    color: #e78ac3;
+    font-size: 2.2rem;
+  }
+  #start-screen {
+    text-align: center;
+    margin-top: 40px;
+  }
+  .input-name {
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #ffb3d9;
+  }
+  button {
+    background-color: #e78ac3;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  .question-card {
+    background: #ffe6f2;
+    border: 2px solid #ffb3d9;
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  }
+  .question-title {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+  }
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  li {
+    margin: 6px 0;
+  }
+  .feedback-card {
+    background: #fff5fb;
+    border: 2px solid #f4a4d4;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+  }
+  .correct { border-color: #8bd67a; }
+  .incorrect { border-color: #ff7b7b; }
+</style>
+</head>
+<body>
+<h1>🖥️✨ Cuestionario: Historia de la Tecnología ✨🖥️</h1>
+
+<div id="start-screen">
+  <h2>Ingresa tu nombre</h2>
+  <input id="studentName" class="input-name" type="text" placeholder="Tu nombre" />
+  <br>
+  <button onclick="startQuiz()">Iniciar Cuestionario</button>
+</div>
+
+<div id="quiz"></div>
+<div id="result"></div>
+
+<script>
+const questions = [
+  {
+    question: "¿Quién es considerado el padre de la computación?",
+    options: ["Alan Turing", "Charles Babbage", "John von Neumann"],
+    answer: "Charles Babbage",
+    explanation: "Charles Babbage diseñó la máquina analítica, considerada el primer concepto de computadora programable."
+  },
+  {
+    question: "¿Cuál fue la primera computadora electrónica de propósito general?",
+    options: ["ENIAC", "UNIVAC", "Colossus"],
+    answer: "ENIAC",
+    explanation: "ENIAC fue la primera computadora electrónica de propósito general, construida en 1945."
+  },
+  {
+    question: "¿En qué generación se usaron transistores?",
+    options: ["Primera", "Segunda", "Tercera"],
+    answer: "Segunda",
+    explanation: "La segunda generación de computadoras reemplazó las válvulas al vacío por transistores, haciéndolas más rápidas y pequeñas."
+  },
+  {
+    question: "¿Quién inventó el primer mouse?",
+    options: ["Steve Jobs", "Bill Gates", "Douglas Engelbart"],
+    answer: "Douglas Engelbart",
+    explanation: "El primer mouse fue creado por Douglas Engelbart en 1964 como parte de un sistema avanzado de interfaz."
+  },
+  {
+    question: "¿Qué compañía lanzó la primera PC exitosa?",
+    options: ["Apple", "IBM", "Microsoft"],
+    answer: "IBM",
+    explanation: "La IBM PC de 1981 se convirtió en el estándar de la computación personal."
+  }
+];
+
+let studentName = "";
+let studentAnswers = [];
+
+function startQuiz() {
+  studentName = document.getElementById('studentName').value;
+  if (!studentName.trim()) return alert("Por favor ingresa tu nombre");
+
+  document.getElementById('start-screen').style.display = "none";
+
+  const quizDiv = document.getElementById('quiz');
+  quizDiv.innerHTML = "";
+
+  questions.forEach((q, i) => {
+    quizDiv.innerHTML += `
+      <div class='question-card'>
+        <div class='question-title'>${i+1}. ${q.question}</div>
+        <ul>
+          ${q.options.map(opt => `
+            <li>
+              <label><input type='radio' name='q${i}' value='${opt}'> ${opt}</label>
+            </li>`).join('')}
+        </ul>
+      </div>`;
+  });
+
+  quizDiv.innerHTML += `<button onclick='finishQuiz()'>Finalizar</button>`;
+}
+
+function finishQuiz() {
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = `<h2>Resultados de ${studentName}</h2>`;
+
+  questions.forEach((q, index) => {
+    const selected = document.querySelector(`input[name='q${index}']:checked`);
+    const studentAnswer = selected ? selected.value : "Sin responder";
+    const correct = studentAnswer === q.answer;
+
+    resultDiv.innerHTML += `
+      <div class="feedback-card ${correct ? 'correct' : 'incorrect'}">
+        <h3>Pregunta ${index + 1}: ${q.question}</h3>
+        <p><strong>Tu respuesta:</strong> ${studentAnswer}</p>
+        <p><strong>Respuesta correcta:</strong> ${q.answer}</p>
+        <p class="explanation"><strong>Explicación:</strong> ${q.explanation}</p>
+      </div>
+    `;
+  });
+}
+</script>
+</body>
+</html>
